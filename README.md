@@ -60,3 +60,8 @@ Launch the web interface to upload and analyze files interactively:
 ```bash
 streamlit run cilium_analyzer/gui.py
 ```
+
+<img width="2862" height="1554" alt="2228BC62-DF7F-453D-B7B6-317621E007D6" src="https://github.com/user-attachments/assets/819690c2-2179-4f5a-953d-80ffd548dc8f" />
+
+<img width="2856" height="1554" alt="73DDEBFB-2492-48D0-8CBD-3F63360F2E23" src="https://github.com/user-attachments/assets/a2b33d14-fbdf-4e10-b206-c50dee232f15" />
+
