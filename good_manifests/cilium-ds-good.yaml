@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: cilium
+  namespace: kube-system
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      k8s-app: cilium
+  template:
+    metadata:
+      labels:
+        k8s-app: cilium
+    spec:
+      hostNetwork: true  # expected for Cilium datapath
+      serviceAccountName: cilium
+      priorityClassName: system-node-critical
+
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - name: cilium-agent
+          image: quay.io/cilium/cilium:v1.15.5
+          imagePullPolicy: IfNotPresent
+
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9879
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9879
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          volumeMounts:
+            - name: bpf
+              mountPath: /sys/fs/bpf
+
+      volumes:
+        - name: bpf
+          hostPath:
+            path: /sys/fs/bpf

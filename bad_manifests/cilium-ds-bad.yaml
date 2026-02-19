@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: cilium
+  namespace: kube-system
+spec:
+  updateStrategy:
+    type: OnDelete   # ❌ should be RollingUpdate
+  template:
+    metadata:
+      labels:
+        k8s-app: cilium
+    spec:
+      hostNetwork: true
+      serviceAccountName: default   # ❌ not hardened
+      containers:
+        - name: cilium-agent
+          image: myrepo/cilium-agent:latest   # ❌ mutable + unofficial
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true   # ❌
+            allowPrivilegeEscalation: true   # ❌
+            capabilities:
+              add:
+                - SYS_ADMIN   # ❌
+                - NET_ADMIN   # ❌
+          volumeMounts:
+            - name: bpf
+              mountPath: /sys/fs/bpf
+      volumes:
+        - name: bpf
+          hostPath:
+            path: /sys/fs/bpf   # ❌ hostPath

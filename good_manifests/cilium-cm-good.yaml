@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cilium-config
+  namespace: kube-system
+data:
+  datapath-mode: "direct"
+  routing-mode: "native"
+  kube-proxy-replacement: "strict"
+  bpf-lb-acceleration: "native"
+  mtu: "1450"
+
+  enable-hubble: "true"
+  enable-metrics: "true"
+  debug: "false"
+
+  enable-bpf-masquerade: "true"
+  enable-endpoint-health-checking: "true"
+  bpf-distributed-lru: "true"
+
+  ipam: "cluster-pool"
+  cluster-id: "1"
+  cluster-pool-ipv4-cidr: "10.0.0.0/16"
+  cluster-pool-ipv4-mask-size: "24"
