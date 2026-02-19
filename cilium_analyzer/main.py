@@ -98,6 +98,16 @@ def print_finding(level: str, msg: str):
         TOTAL_SCORE += SEVERITY_WEIGHTS.get(level, 1)
 
 
+def reset_analysis():
+    global TOTAL_SCORE, FINDINGS
+    TOTAL_SCORE = 0
+    FINDINGS = {
+        "SECURITY": [],
+        "RELIABILITY": [],
+        "PERFORMANCE": [],
+        "BEST-PRACTICE": [],
+    }
+
 # =============================
 # Security Checks
 # =============================
@@ -359,22 +369,8 @@ def generate_report():
 # =============================
 
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python main.py <file_or_dir> ...")
-        sys.exit(1)
-
-    files_to_scan = []
-    for arg in sys.argv[1:]:
-        if os.path.isdir(arg):
-            for root, _, files in os.walk(arg):
-                for f in files:
-                    if f.lower().endswith((".yaml", ".yml")):
-                        files_to_scan.append(os.path.join(root, f))
-        else:
-            files_to_scan.append(arg)
-
-    for path in files_to_scan:
+def scan_paths(paths: List[str]):
+    for path in paths:
         print(f"\n===== Analyzing {path} =====")
         docs = load_yaml(path)
 
@@ -400,6 +396,23 @@ def main():
                 check_cm_performance(d)
                 check_hubble(d)
                 check_debug(d)
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <file_or_dir> ...")
+        sys.exit(1)
+
+    files_to_scan = []
+    for arg in sys.argv[1:]:
+        if os.path.isdir(arg):
+            for root, _, files in os.walk(arg):
+                for f in files:
+                    if f.lower().endswith((".yaml", ".yml")):
+                        files_to_scan.append(os.path.join(root, f))
+        else:
+            files_to_scan.append(arg)
+
+    scan_paths(files_to_scan)
 
     generate_report()
 

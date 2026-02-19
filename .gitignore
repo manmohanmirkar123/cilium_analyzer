@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+CILIUM_REPORT.md
+.DS_Store

@@ -22,11 +22,22 @@ The tool calculates a **Cilium Health Score** (0-100) by starting at 100 and ded
 
 1. Clone the repository.
 2. Install dependencies:
+
+   **For Command Line Interface (CLI):**
+
    ```bash
    pip install -r requirements.txt
    ```
 
+   **For Graphical User Interface (GUI):**
+
+   ```bash
+   pip install -r requirements-gui.txt
+   ```
+
 ## Usage
+
+### Command Line Interface (CLI)
 
 Run the analyzer against your Cilium YAML manifests or a directory containing them:
 
@@ -41,3 +52,11 @@ python cilium_analyzer/main.py ./cilium-manifests/
 ```
 
 The tool will generate a report named `CILIUM_REPORT.md` in your current directory.
+
+### Graphical User Interface (GUI)
+
+Launch the web interface to upload and analyze files interactively:
+
+```bash
+streamlit run cilium_analyzer/gui.py
+```
